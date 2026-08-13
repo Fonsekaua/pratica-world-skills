@@ -2,11 +2,14 @@
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { ContextType } from "../types/ContextType";
 import { children } from "../types/Children";
+import { findManyVacancies } from "../services/authService";
+import { VacancyType } from "../types/Vagacy";
 
 export const AuthContext = createContext<ContextType | null>(null);
 
 export const AuthProvider = ({ children }: children) => {
     const [logged, setLogged] = useState(false)
+    const [vacancies, setVacancies] = useState<VacancyType[]>([]);
     useEffect(() => {
         const getLogged = () => {
             const token = localStorage.getItem("token")
@@ -17,10 +20,20 @@ export const AuthProvider = ({ children }: children) => {
         getLogged()
     }, [logged])
 
+    useEffect(() => {
+        const getVacancy = async() => {
+            const response = await findManyVacancies()
+            setVacancies(response)
+        }
 
+        getVacancy()
+    },[])
+    
     const ContextValue: ContextType = {
         logged,
-        setLogged
+        setLogged,
+        vacancies,
+        setVacancies
     }
 
     return (
