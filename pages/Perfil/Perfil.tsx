@@ -1,39 +1,14 @@
 'use client'
 import { useAuth } from "@/src/contexts/AuthContext";
-import { dashboard } from "@/src/services/authService"
+import { User } from "@/src/types/User";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react"
-type User = {
-    id: string;
-    nome: string;
-    email: string;
-    criadoEm: string;
-};
 
-type DashboardResponse = {
-    usuario: User;
-};
+
 const Perfil = () => {
-    const [user, setUser] = useState<User | null>(null);
     const router = useRouter();
-    const { setLogged } = useAuth()
-    useEffect(() => {
-        const getUser = async () => {
-            try {
-                const data: DashboardResponse = await dashboard();
-                if (data) {
-                    setUser(data.usuario);
-                } else {
-                    localStorage.removeItem("token");
-                    router.push("/auth/login");
-                }
-            } catch (error) {
-                console.log(error)
-            }
-        };
+    const { setLogged,user } = useAuth()
 
-        getUser();
-    }, [router, user]);
     const handleClick = () => {
         localStorage.removeItem('token')
         setLogged(false)

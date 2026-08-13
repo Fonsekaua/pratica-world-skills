@@ -15,7 +15,7 @@ const Login = () => {
     })
     const [err, setErr] = useState('')
     const router = useRouter()
-    const { logged,setLogged } = useAuth()
+    const { logged, setLogged } = useAuth()
     const { email, senha } = formData
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target
@@ -44,7 +44,11 @@ const Login = () => {
             setErr('')
         }, 2500);
     }, [err]);
-
+    useEffect(() => {
+        if (logged) {
+            router.push('/dashboard/perfil')
+        }
+    }, [logged, router])
     return (
         <>
             <form className='flex relative flex-col items-center gap-10 w-fit' onSubmit={handleSubmit}>
@@ -52,7 +56,7 @@ const Login = () => {
 
                     <div className={`text-rose-500 duration-500 transition-all absolute top-[-200px] font-bold opacity-0 ${err && "translate-y-20 opacity-100"} flex flex-col items-center justify-center gap-2`}>
                         <h1 className='w-10 h-10 rounded-full flex items-center justify-center border-3'>
-                            X 
+                            X
                         </h1>
                         <p>{err}</p>
                     </div>

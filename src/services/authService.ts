@@ -13,7 +13,7 @@ export const login = async (data: LoginData) => {
   return response.data;
 };
 
-export const dashboard = async () => {
+export const perfil = async () => {
   const response = await api.get('/api/auth/eu');
   return response.data
 
@@ -39,7 +39,7 @@ export const findVacancy = async(id: string) => {
   return response.data
 }
 
-export const editVacancy = async(id: string) => {
-  const response = await api.put(`/api/vagas/${id}`)
+export const editVacancy = async(id: string,vacancy: VacancyType) => {
+  const response = await api.put(`/api/vagas/${id}`,vacancy)
   return response.data
 }
