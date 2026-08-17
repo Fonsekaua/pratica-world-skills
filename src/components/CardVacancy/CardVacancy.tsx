@@ -154,7 +154,7 @@ useEffect(() => {
                     </div>
 
                     <span
-                        className={`rounded-full px-3 py-1 text-xs font-medium ${
+                        className={`rounded-full px-3 py-1 border text-xs font-medium ${
                             vacancy.status === "aberta"
                                 ? "bg-green-500/10 text-green-400"
                                 : "bg-rose-500/10 text-rose-400"
