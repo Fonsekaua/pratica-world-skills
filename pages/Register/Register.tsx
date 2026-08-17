@@ -27,12 +27,13 @@ const Register = () => {
     const handleSubmit = async (e: React.SubmitEvent) => {
         e.preventDefault();
         try {
-            const response = await register(formData)
+            await register(formData)
             router.push('/auth/login')
 
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 setErr(error.response?.data.mensagem)
+                console.log(err)
             }
         }
     }

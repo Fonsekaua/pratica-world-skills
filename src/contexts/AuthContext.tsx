@@ -31,7 +31,9 @@ export const AuthProvider = ({ children }: children) => {
 
         getLogged()
     }, [logged])
-
+    useEffect(() => {
+        console.clear()
+    },[])
     useEffect(() => {
 
         if (!logged) return

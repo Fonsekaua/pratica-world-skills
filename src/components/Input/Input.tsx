@@ -13,6 +13,7 @@ export default function Input(props: InputType) {
        type={props.type} 
        placeholder={props.placeholder}
        onChange={props.onChange}
+       required
        />
     </div>
   )

@@ -1,11 +1,13 @@
 'use client'
 import CardVacancy from "@/src/components/CardVacancy/CardVacancy"
 import Input from "@/src/components/Input/Input"
+import TextArea from "@/src/components/TextArea/TextArea"
 import { useAuth } from "@/src/contexts/AuthContext"
 import { createVagacy, editVacancy } from "@/src/services/authService"
 import { VacancyType } from "@/src/types/Vagacy"
+import axios from "axios"
 
-import { ChangeEvent, FormEvent, useState } from "react"
+import { ChangeEvent, FormEvent, useEffect, useState } from "react"
 import { FaDizzy, FaFrown, FaSmile } from "react-icons/fa"
 import { FaFaceSadTear } from "react-icons/fa6"
 
@@ -13,6 +15,7 @@ const Vacancy = () => {
     const { vacancies, setVacancies, user } = useAuth()
     const [modal, setModal] = useState(false)
     const [edit, setEdit] = useState('')
+    const [err, setErr] = useState('')
     const [vacancy, setVacancy] = useState<VacancyType>({
         title: '',
         company: '',
@@ -21,7 +24,7 @@ const Vacancy = () => {
         status: 'aberta'
     })
     const [hover, setHover] = useState(false)
-    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target
 
         setVacancy(prev => ({
@@ -31,38 +34,42 @@ const Vacancy = () => {
     }
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        if (edit) {
-            const response = await editVacancy(edit, vacancy)
-            console.log(response)
+        try {
+            if (edit) {
+                const response = await editVacancy(edit, vacancy)
 
-            const newList = vacancies.filter(e => e.id != edit);
-            newList.push(response.vaga)
-            setVacancies(newList)
-            setEdit('')
-        } else {
-            const response = await createVagacy(vacancy)
-            const newList = vacancies
-            newList.push(response.vaga)
-            setVacancies(newList)
+                const newList = vacancies.filter(e => e.id != edit);
+                newList.push(response.vaga)
+                setVacancies(newList)
+                setEdit('')
+            } else {
+                const response = await createVagacy(vacancy)
+                const newList = vacancies
+                newList.push(response.vaga)
+                setVacancies(newList)
+            }
+            setModal(!modal)
+
+            setVacancy({
+                title: '',
+                company: '',
+                description: '',
+                location: '',
+                status: 'aberta'
+            })
+
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                setErr(error.response?.data.mensagem)
+                console.log(err)
+            }
         }
-        setModal(!modal)
-
-        setVacancy({
-            title: '',
-            company: '',
-            description: '',
-            location: '',
-            status: 'aberta'
-        })
-
     }
 
     const handleEditClick = async (id: string) => {
         setEdit(id)
         setModal(!modal)
         const editVacancy = vacancies.find(e => e.id == id);
-        console.log(id)
-        console.log(editVacancy)
         if (!editVacancy) return
         setVacancy(
             {
@@ -96,11 +103,11 @@ const Vacancy = () => {
                 <div className="w-screen h-screen bg-[#0a0a0a] fixed flex justify-center items-center top-0 left-0 z-10">
                     <form action="" className="flex flex-col gap-2" onSubmit={handleSubmit}>
                         <h2 className="text-2xl text-center font-medium text-sky-500">
-                            {edit?"Edite a sua vaga":"Crie sua nova vaga"}
+                            {edit ? "Edite a sua vaga" : "Crie sua nova vaga"}
                         </h2>
                         <Input name="title" onChange={handleChange} placeholder="Digite o titulo da sua vaga..." type="text" value={vacancy.title} />
                         <Input name="company" onChange={handleChange} placeholder="Digite a empresa da sua vaga..." type="text" value={vacancy.company} />
-                        <Input name="description" onChange={handleChange} placeholder="Descreva sua vaga..." type="text" value={vacancy.description} />
+                        <TextArea name="description" onChange={handleChange} placeholder="Descreva sua vaga..." value={vacancy.description} />
                         <Input name="location" onChange={handleChange} placeholder="Digite a localização da sua vaga..." type="text" value={vacancy.location} />
                         <Input name="status" onChange={handleChange} placeholder="Digite os status da sua vaga..." type="text" value={vacancy.status} />
                         <div className="flex items-center gap-2 justify-between *:w-full *:p-2 *:rounded-md *:cursor-pointer *:font-medium mt-5">

@@ -28,18 +28,32 @@ export const findManyVacancies = async () => {
   const response = await api.get('/api/vagas')
   return response.data
 }
-
-export const deleteVacancy = async(id: string) => {
+export const logout = async () => {
+  const response = await api.post('/api/auth/sair')
+  return response.data
+}
+export const deleteVacancy = async (id: string) => {
   const response = await api.delete(`/api/vagas/${id}`)
   return response.data
 }
 
-export const findVacancy = async(id: string) => {
+export const findVacancy = async (id: string) => {
   const response = await api.get(`/api/vagas/${id}`)
   return response.data
 }
 
-export const editVacancy = async(id: string,vacancy: VacancyType) => {
-  const response = await api.put(`/api/vagas/${id}`,vacancy)
+export const editVacancy = async (id: string, vacancy: VacancyType) => {
+  const response = await api.put(`/api/vagas/${id}`, vacancy)
+  return response.data
+}
+
+export const uploadImage = async (formData: FormData) => {
+  const response = await api.post("/api/auth/upload-imagem", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data"
+      }
+  }
+)
+
   return response.data
 }

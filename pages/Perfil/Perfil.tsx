@@ -1,18 +1,51 @@
 'use client'
 import { useAuth } from "@/src/contexts/AuthContext";
+import { logout, uploadImage } from "@/src/services/authService";
 import { User } from "@/src/types/User";
+import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react"
+import { ChangeEvent, useEffect, useState } from "react"
 
 
 const Perfil = () => {
     const router = useRouter();
-    const { setLogged,user } = useAuth()
+    const [err, setErr] = useState('')
+    const { setLogged, user } = useAuth()
+    const [image, setImage] = useState<object | null>(null)
+    const [previewImage, setPreviewImage] = useState<string | null>(null)
+    const handleClick = async () => {
+        try {
+            await logout()
+            localStorage.removeItem('token')
+            setLogged(false)
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                setErr(error.response?.data.mensagem)
+                console.log(err)
+            }
+        }
+    }
+    const handleChange = async (event: ChangeEvent<HTMLInputElement>) => {
+        if (!event.target.files) return
 
-    const handleClick = () => {
-        localStorage.removeItem('token')
-        setLogged(false)
-        router.push('/auth/login')
+        const file = event.target.files[0]
+
+        setImage(file)
+
+        const url = URL.createObjectURL(file)
+
+        setPreviewImage(url)
+
+        const formData = new FormData()
+
+        formData.append('image', file)
+
+        try {
+            await uploadImage(formData)
+        } catch (err) {
+            console.log("Ocorreu um erro: ", err)
+        }
+
     }
     return (
         <div>
@@ -25,10 +58,27 @@ const Perfil = () => {
                 {/* Cabeçalho */}
                 <div className="flex flex-col items-center gap-4 sm:flex-row">
 
-                    <div className="flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 text-4xl font-bold">
-                        {user?.nome.charAt(0)}
-                    </div>
+                    <fieldset className="flex h-24 w-24 items-center justify-center border-2   rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 text-4xl font-bold relative">
 
+                        <legend className="absolute z-50 right-0 bottom-0 bg-sky-500 cursor-pointer active:scale-90 transition-all border-2 border-white w-8 h-8 flex items-center justify-center rounded-full font-medium ">
+                            <input type="file" className="w-full h-full absolute opacity-0 inset-0 cursor-pointer" onChange={handleChange} accept="image/*" />
+                            +</legend>
+                        {
+                            user?.profileImage || previewImage ? (
+                                <img
+                                    src={
+                                        previewImage
+                                            ? previewImage
+                                            : `https://api-estudos-joao.shop/${user?.profileImage}`
+                                    }
+                                    className="w-full h-full rounded-full object-cover"
+                                    alt="Foto de perfil"
+                                />
+                            ) : (
+                                user?.nome?.charAt(0)
+                            )
+                        }
+                    </fieldset>
                     <div className="text-center sm:text-left">
                         <h2 className="text-2xl font-semibold">
                             {user?.nome}
