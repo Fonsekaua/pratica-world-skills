@@ -3,8 +3,8 @@ import { useAuth } from "@/src/contexts/AuthContext";
 import { logout } from "@/src/services/authService";
 import { uploadImage } from "@/src/services/perfilSerivce";
 import axios from "axios";
+import Image from "next/image";
 import { ChangeEvent, useState } from "react"
-
 
 const Perfil = () => {
     const [err, setErr] = useState('')
@@ -42,10 +42,13 @@ const Perfil = () => {
         }
 
     }
+
+    const imageSrc = previewImage ? previewImage : `https://api-estudos-joao.shop/${user?.profileImage}`
     return (
         <div>
             <h1 className="mb-8 text-3xl font-bold">
                 Meu Perfil
+
             </h1>
 
             <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-8  w-4xl">
@@ -57,19 +60,18 @@ const Perfil = () => {
 
                         <legend className="absolute z-50 right-0 bottom-0 bg-sky-500 cursor-pointer active:scale-90 transition-all border-2 border-white w-8 h-8 flex items-center justify-center rounded-full font-medium ">
                             <input type="file" className="w-full h-full absolute opacity-0 inset-0 cursor-pointer" onChange={handleChange} accept="image/*" />
-                                +
-                            </legend>
+                            +
+                        </legend>
                         {
                             user?.profileImage || previewImage ? (
-                                <img
-                                    src={
-                                        previewImage
-                                            ? previewImage
-                                            : `https://api-estudos-joao.shop/${user?.profileImage}`
-                                    }
+                                <Image
+                                    src={imageSrc}
+                                    width={100}
+                                    height={100}
                                     className="w-full h-full rounded-full object-cover"
                                     alt="Foto de perfil"
                                 />
+
                             ) : (
                                 user?.nome?.charAt(0)
                             )
@@ -77,6 +79,7 @@ const Perfil = () => {
                     </fieldset>
                     <div className="text-center sm:text-left">
                         <h2 className="text-2xl font-semibold">
+                            
                             {user?.nome}
                         </h2>
 
