@@ -2,10 +2,11 @@
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { ContextType } from "../types/ContextType";
 import { children } from "../types/Children";
-import { perfil, findManyVacancies } from "../services/authService";
 import { VacancyType } from "../types/Vagacy";
 import { User } from "../types/User";
 import { useRouter } from "next/navigation";
+import { findManyVacancies } from "../services/vacancyService";
+import { perfil } from "../services/perfilSerivce";
 
 export const AuthContext = createContext<ContextType | null>(null);
 

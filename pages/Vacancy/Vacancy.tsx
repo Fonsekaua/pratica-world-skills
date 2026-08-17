@@ -3,13 +3,13 @@ import CardVacancy from "@/src/components/CardVacancy/CardVacancy"
 import Input from "@/src/components/Input/Input"
 import TextArea from "@/src/components/TextArea/TextArea"
 import { useAuth } from "@/src/contexts/AuthContext"
-import { createVagacy, editVacancy } from "@/src/services/authService"
+import { createVagacy, editVacancy } from "@/src/services/vacancyService"
 import { VacancyType } from "@/src/types/Vagacy"
 import axios from "axios"
 
-import { ChangeEvent, FormEvent, useEffect, useState } from "react"
-import { FaDizzy, FaFrown, FaSmile } from "react-icons/fa"
-import { FaFaceSadTear } from "react-icons/fa6"
+import { ChangeEvent, FormEvent, useState } from "react"
+import {  FaFrown, FaSmile } from "react-icons/fa"
+
 
 const Vacancy = () => {
     const { vacancies, setVacancies, user } = useAuth()
@@ -115,7 +115,7 @@ const Vacancy = () => {
                                 Cancelar
                             </button>
                             <button className="border border-emerald-500 bg-emerald-500">
-                                Criar
+                                 {edit ? "Editar" : "Criar"}
                             </button>
                         </div>
                     </form>

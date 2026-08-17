@@ -1,17 +1,14 @@
 'use client'
 import { useAuth } from "@/src/contexts/AuthContext";
-import { logout, uploadImage } from "@/src/services/authService";
-import { User } from "@/src/types/User";
+import { logout } from "@/src/services/authService";
+import { uploadImage } from "@/src/services/perfilSerivce";
 import axios from "axios";
-import { useRouter } from "next/navigation";
-import { ChangeEvent, useEffect, useState } from "react"
+import { ChangeEvent, useState } from "react"
 
 
 const Perfil = () => {
-    const router = useRouter();
     const [err, setErr] = useState('')
     const { setLogged, user } = useAuth()
-    const [image, setImage] = useState<object | null>(null)
     const [previewImage, setPreviewImage] = useState<string | null>(null)
     const handleClick = async () => {
         try {
@@ -29,8 +26,6 @@ const Perfil = () => {
         if (!event.target.files) return
 
         const file = event.target.files[0]
-
-        setImage(file)
 
         const url = URL.createObjectURL(file)
 
@@ -62,7 +57,8 @@ const Perfil = () => {
 
                         <legend className="absolute z-50 right-0 bottom-0 bg-sky-500 cursor-pointer active:scale-90 transition-all border-2 border-white w-8 h-8 flex items-center justify-center rounded-full font-medium ">
                             <input type="file" className="w-full h-full absolute opacity-0 inset-0 cursor-pointer" onChange={handleChange} accept="image/*" />
-                            +</legend>
+                                +
+                            </legend>
                         {
                             user?.profileImage || previewImage ? (
                                 <img

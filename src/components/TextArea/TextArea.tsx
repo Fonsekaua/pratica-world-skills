@@ -9,7 +9,7 @@ export default function TextArea(props: TextareaType) {
             </label>
             <textarea
             
-                className='py-3 px-2 outline-none  bg-mist-800 rounded-md min-h-20 max-h-32'
+                className='py-3 px-2 outline-none  bg-mist-800 rounded-md min-h-32 max-h-32'
                 value={props.value}
                 name={props.name}
                 placeholder={props.placeholder}

@@ -1,7 +1,7 @@
 'use client'
 
 import { useAuth } from "@/src/contexts/AuthContext"
-import { deleteVacancy } from "@/src/services/authService"
+import { deleteVacancy } from "@/src/services/vacancyService"
 import { VacancyType } from "@/src/types/Vagacy"
 import { useEffect, useState } from "react"
 
@@ -19,8 +19,7 @@ const CardVacancy = ({ vacancy, handleEditClick }: Props) => {
     const [time,setTime] = useState(10)
     const del = async (id: string) => {
         try {
-            const response = await deleteVacancy(id)
-
+            await deleteVacancy(id)
 
             const list = vacancies.filter(x => x.id !== id)
 
